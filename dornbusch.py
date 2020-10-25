@@ -24,7 +24,7 @@ def simulate(iT=100, deta=0.8, dsigma= 0.8, dbeta=0.0, dalpha=1.0, dphi=0.5, dla
         dy_pot= widgets.fixed(dy_pot),
         drstar= widgets.fixed(drstar),
         dpi= widgets.FloatSlider(
-            description="$\\pi$", min=0.01, max=100, step=0.01, value= dpi
+            description="$\\pi$", min=0.01, max=5, step=0.1, value= dpi
         ),
         # iShock= widgets.FloatSlider(
         #     description="Shock period", min=1, max=99, step=1, value= iShock
