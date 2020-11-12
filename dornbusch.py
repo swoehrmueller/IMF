@@ -10,7 +10,7 @@ plt.style.use('seaborn-white')
 import ipywidgets as widgets
 
 
-def simulate(iT=100, deta=0.8, dsigma= 0.8, dbeta=0.0, dalpha=1.0, dphi=0.5, dlambda=0.0, dpstar=0.0, dy_pot=1.0, drstar=0.05, dpi=0.1, iShock=5):
+def simulate(iT=100, deta=0.8, dsigma= 0.8, dbeta=0.0, dalpha=1.0, dphi=0.5, dlambda=0.0, dpstar=0.0, dy_pot=1.0, drstar=0.05, dpi_t=0.2, iShock=5):
 
     widgets.interact(
         simulate_,
@@ -23,8 +23,9 @@ def simulate(iT=100, deta=0.8, dsigma= 0.8, dbeta=0.0, dalpha=1.0, dphi=0.5, dla
         dpstar= widgets.fixed(dpstar),
         dy_pot= widgets.fixed(dy_pot),
         drstar= widgets.fixed(drstar),
-        dpi= widgets.FloatSlider(
-            description="$\\pi$", min=0.01, max=5, step=0.01, value= dpi
+        dpi_t= widgets.FloatSlider(
+            # description="$\\pi$", min=0.01, max=5, step=0.01, value= dpi
+            description="$\\tilde{\\pi}$", min=0.01, max=0.999, step=0.01, value= dpi_t, readout=True
         ),
         # iShock= widgets.FloatSlider(
         #     description="Shock period", min=1, max=99, step=1, value= iShock
@@ -33,23 +34,10 @@ def simulate(iT=100, deta=0.8, dsigma= 0.8, dbeta=0.0, dalpha=1.0, dphi=0.5, dla
         iT= widgets.fixed(iT),
     )
 
-    # ### a. parameters (values & descriptions)
-    # iT=       # time horizon
-    # deta=     # income elasticity of demand for money
-    # dsigma=   # interest rate semielasticity of demand for money
-    # dbeta=    # shift parameter
-    # dalpha=   # measures responsiveness of domestic goods demand to changes in RER
-    # dphi=     # income elasticity of demand for domestic goods
-    # dlambda=  # the interest rate semielasticity of demand for domestic goods
-    # dpstar=   # foreign price level, normalized to zero
-    # dy_pot=   # natural production level
-    # drstar=   # foreign interest rate
-    # dpi=      # degree of price flexibility
-
-    # Formed via consistent expectations
-    # dtheta=   # speed of adjustment of exchange rate expectations formation
-
-def simulate_(iT, deta, dsigma, dbeta, dalpha, dphi, dlambda, dpstar, dy_pot, drstar, dpi, iShock):
+def simulate_(iT, deta, dsigma, dbeta, dalpha, dphi, dlambda, dpstar, dy_pot, drstar, dpi_t, iShock):
+    ### a. apply transformation to slider
+    dpi= dpi_t/(1-dpi_t)
+    
     ### b. steady state and shock
     # iShock=  # time period in which shock happens
     iShock= np.int(iShock)
@@ -100,14 +88,14 @@ def simulate_(iT, deta, dsigma, dbeta, dalpha, dphi, dlambda, dpstar, dy_pot, dr
     ### e. figure
     fig= plt.figure(figsize=(6,4), dpi=100)
     ax= fig.add_subplot(1,1,1)
-    # ax.plot(vP, label= 'Prices', linewidth=2.0)
-    ax.plot(vP_mask, label= 'Prices', linewidth=2.0)
-    # ax.plot(vR,'--', label= 'Interest rates', linewidth=2.0)
-    ax.plot(vR_mask, '--', label= 'Interest rates', linewidth=2.0)
-    # ax.plot(vS, label= 'Exchange rate', linewidth=2.0)
-    ax.plot(vS_mask, label= 'Exchange rate', linewidth=2.0)
-    # ax.plot(vM, '1' ,label= 'Money supply', linewidth=2.0)
-    ax.vlines(x=iShock, ymin= vR[iShock] - 0.2, ymax= vS[iShock] + 0.2,colors='k', ls='--', lw=1, label='Money supply shock')
+    ax.plot(vP, label= 'Prices', linewidth=2.0)
+    # ax.plot(vP_mask, label= 'Prices', linewidth=2.0)
+    ax.plot(vR,'--', label= 'Interest rates', linewidth=2.0)
+    # ax.plot(vR_mask, '--', label= 'Interest rates', linewidth=2.0)
+    ax.plot(vS, label= 'Exchange rate', linewidth=2.0)
+    # ax.plot(vS_mask, label= 'Exchange rate', linewidth=2.0)
+    ax.plot(vM, '1' ,label= 'Money supply', linewidth=2.0)
+    # ax.vlines(x=iShock, ymin= vR[iShock] - 0.2, ymax= vS[iShock] + 0.2,colors='k', ls='--', lw=1, label='Money supply shock')
 
     ax.set_xlabel("time")
 
